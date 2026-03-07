@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.github.bgub.CosmicExtAppletRedbull</id>
+  <id>com.github.bgub.CosmicExtAppletVigil</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MPL-2.0</project_license>
-  <name>Caffeine</name>
-  <summary>Keep your screen awake — a caffeine applet for the COSMIC desktop</summary>
-  <launchable type="desktop-id">com.github.bgub.CosmicExtAppletRedbull.desktop</launchable>
+  <name>Vigil</name>
+  <summary>Keep your screen awake — a vigil applet for the COSMIC desktop</summary>
+  <launchable type="desktop-id">com.github.bgub.CosmicExtAppletVigil.desktop</launchable>
   <provides>
-    <id>com.github.bgub.CosmicExtAppletRedbull</id>
+    <id>com.github.bgub.CosmicExtAppletVigil</id>
     <binaries>
-      <binary>cosmic-ext-applet-redbull</binary>
+      <binary>cosmic-ext-applet-vigil</binary>
     </binaries>
   </provides>
   <requires>
@@ -25,6 +25,7 @@
   </categories>
   <keywords>
     <keyword>COSMIC</keyword>
+    <keyword>vigil</keyword>
     <keyword>caffeine</keyword>
     <keyword>screen</keyword>
     <keyword>awake</keyword>

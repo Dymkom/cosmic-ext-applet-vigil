@@ -1,4 +1,4 @@
-app-title = Caffeine
+app-title = Vigil
 active = Active
 inactive = Inactive
 activate = Activate

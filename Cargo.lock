@@ -867,7 +867,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cosmic-ext-applet-redbull"
+name = "cosmic-ext-applet-vigil"
 version = "0.1.0"
 dependencies = [
  "i18n-embed",

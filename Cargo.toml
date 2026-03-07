@@ -1,9 +1,9 @@
 [package]
-name = "cosmic-ext-applet-redbull"
+name = "cosmic-ext-applet-vigil"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
-description = "A caffeine applet for the COSMIC™ desktop — keep your screen awake"
+description = "Keep your screen awake — a vigil applet for the COSMIC™ desktop"
 
 [dependencies]
 i18n-embed-fl = "0.10"

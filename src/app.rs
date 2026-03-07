@@ -36,7 +36,7 @@ impl Drop for AppModel {
 #[derive(Debug, Clone)]
 pub enum Message {
     TogglePopup,
-    ToggleCaffeine,
+    ToggleVigil,
     Activate(u32),
     Deactivate,
     Tick,
@@ -61,7 +61,7 @@ impl AppModel {
             "/org/freedesktop/ScreenSaver",
             Some("org.freedesktop.ScreenSaver"),
             "Inhibit",
-            &("Caffeine", "User requested screen stay awake"),
+            &("Vigil", "User requested screen stay awake"),
         );
 
         match reply {
@@ -148,7 +148,7 @@ impl cosmic::Application for AppModel {
     type Flags = ();
     type Message = Message;
 
-    const APP_ID: &'static str = "com.github.bgub.CosmicExtAppletRedbull";
+    const APP_ID: &'static str = "com.github.bgub.CosmicExtAppletVigil";
 
     fn core(&self) -> &cosmic::Core {
         &self.core
@@ -253,7 +253,7 @@ impl cosmic::Application for AppModel {
             });
 
         let btn = widget::button::custom(self.core.applet.autosize_window(content))
-            .on_press(Message::ToggleCaffeine)
+            .on_press(Message::ToggleVigil)
             .class(cosmic::theme::Button::AppletIcon);
 
         widget::mouse_area(btn)
@@ -372,7 +372,7 @@ impl cosmic::Application for AppModel {
 
     fn update(&mut self, message: Self::Message) -> Task<cosmic::Action<Self::Message>> {
         match message {
-            Message::ToggleCaffeine => {
+            Message::ToggleVigil => {
                 if self.active {
                     self.deactivate();
                 } else {

@@ -1,5 +1,5 @@
-name := 'cosmic-ext-applet-redbull'
-appid := 'com.github.bgub.CosmicExtAppletRedbull'
+name := 'cosmic-ext-applet-vigil'
+appid := 'com.github.bgub.CosmicExtAppletVigil'
 
 rootdir := ''
 prefix := '/usr'
