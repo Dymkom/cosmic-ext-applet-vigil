@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.bgub.CosmicExtAppletRedbull</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  <name>Caffeine</name>
+  <summary>Keep your screen awake — a caffeine applet for the COSMIC desktop</summary>
+  <launchable type="desktop-id">com.github.bgub.CosmicExtAppletRedbull.desktop</launchable>
+  <provides>
+    <id>com.github.bgub.CosmicExtAppletRedbull</id>
+    <binaries>
+      <binary>cosmic-ext-applet-redbull</binary>
+    </binaries>
+  </provides>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+  <categories>
+    <category>COSMIC</category>
+  </categories>
+  <keywords>
+    <keyword>COSMIC</keyword>
+    <keyword>caffeine</keyword>
+    <keyword>screen</keyword>
+    <keyword>awake</keyword>
+  </keywords>
+  <content_rating type="oars-1.1" />
+</component>

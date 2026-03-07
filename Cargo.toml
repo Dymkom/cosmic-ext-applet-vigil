@@ -1,0 +1,27 @@
+[package]
+name = "cosmic-ext-applet-redbull"
+version = "0.1.0"
+edition = "2024"
+license = "MPL-2.0"
+description = "A caffeine applet for the COSMIC™ desktop — keep your screen awake"
+
+[dependencies]
+i18n-embed-fl = "0.10"
+rust-embed = "8.7.2"
+tokio = { version = "1.48.0", features = ["time"] }
+
+[dependencies.i18n-embed]
+version = "0.16"
+features = ["fluent-system", "desktop-requester"]
+
+[dependencies.libcosmic]
+git = "https://github.com/pop-os/libcosmic.git"
+features = [
+    "applet",
+    "applet-token",
+    "dbus-config",
+    "multi-window",
+    "tokio",
+    "wayland",
+    "winit",
+]
