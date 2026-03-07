@@ -875,6 +875,7 @@ dependencies = [
  "libcosmic",
  "rust-embed",
  "tokio",
+ "zbus",
 ]
 
 [[package]]

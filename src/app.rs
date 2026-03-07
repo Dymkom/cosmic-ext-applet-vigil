@@ -23,7 +23,8 @@ pub struct AppModel {
     config_handler: Option<cosmic_config::Config>,
     active: bool,
     remaining_secs: u32,
-    inhibit_process: Option<std::process::Child>,
+    inhibit_conn: Option<zbus::blocking::Connection>,
+    inhibit_cookie: Option<u32>,
 }
 
 impl Drop for AppModel {
@@ -47,37 +48,47 @@ impl AppModel {
     fn activate(&mut self, duration_mins: u32) {
         self.deactivate();
 
-        let child = std::process::Command::new("systemd-inhibit")
-            .args([
-                "--what=idle",
-                "--who=Caffeine",
-                "--why=User requested screen stay awake",
-                "sleep",
-                "infinity",
-            ])
-            .stdin(std::process::Stdio::null())
-            .stdout(std::process::Stdio::null())
-            .stderr(std::process::Stdio::null())
-            .spawn();
-
-        match child {
-            Ok(child) => {
-                self.inhibit_process = Some(child);
-                self.active = true;
-                self.remaining_secs = duration_mins * 60;
-                self.config.duration_mins = duration_mins;
-                self.save_config();
-            }
+        let conn = match zbus::blocking::Connection::session() {
+            Ok(c) => c,
             Err(e) => {
-                eprintln!("failed to spawn systemd-inhibit: {e}");
+                eprintln!("failed to connect to session bus: {e}");
+                return;
             }
+        };
+
+        let reply = conn.call_method(
+            Some("org.freedesktop.ScreenSaver"),
+            "/org/freedesktop/ScreenSaver",
+            Some("org.freedesktop.ScreenSaver"),
+            "Inhibit",
+            &("Caffeine", "User requested screen stay awake"),
+        );
+
+        match reply {
+            Ok(msg) => match msg.body().deserialize::<u32>() {
+                Ok(cookie) => {
+                    self.inhibit_conn = Some(conn);
+                    self.inhibit_cookie = Some(cookie);
+                    self.active = true;
+                    self.remaining_secs = duration_mins * 60;
+                    self.config.duration_mins = duration_mins;
+                    self.save_config();
+                }
+                Err(e) => eprintln!("failed to parse Inhibit reply: {e}"),
+            },
+            Err(e) => eprintln!("failed to call ScreenSaver.Inhibit: {e}"),
         }
     }
 
     fn deactivate(&mut self) {
-        if let Some(mut child) = self.inhibit_process.take() {
-            let _ = child.kill();
-            let _ = child.wait();
+        if let (Some(conn), Some(cookie)) = (self.inhibit_conn.take(), self.inhibit_cookie.take()) {
+            let _ = conn.call_method(
+                Some("org.freedesktop.ScreenSaver"),
+                "/org/freedesktop/ScreenSaver",
+                Some("org.freedesktop.ScreenSaver"),
+                "UnInhibit",
+                &(cookie,),
+            );
         }
         self.active = false;
         self.remaining_secs = 0;
@@ -170,7 +181,8 @@ impl cosmic::Application for AppModel {
             popup: None,
             active: false,
             remaining_secs: 0,
-            inhibit_process: None,
+            inhibit_conn: None,
+            inhibit_cookie: None,
         };
 
         (app, Task::none())
@@ -202,8 +214,8 @@ impl cosmic::Application for AppModel {
             if self.is_indefinite() {
                 row = row.push(
                     widget::icon(widget::icon::from_svg_bytes(INFINITY_SVG).symbolic(true))
-                        .width(Length::Fixed(18.0))
-                        .height(Length::Fixed(18.0)),
+                        .width(Length::Fixed(14.0))
+                        .height(Length::Fixed(7.0)),
                 );
             } else {
                 row = row.push(widget::text(self.format_remaining()).size(14.0));
@@ -262,21 +274,20 @@ impl cosmic::Application for AppModel {
             cosmic::iced::Color::from_rgba(1.0, 1.0, 1.0, 0.08)
         };
 
-        let status_block = widget::container(
-            widget::column()
-                .push(widget::text::heading(status_text))
-                .push_maybe(if self.active {
-                    Some(widget::text::title1(self.format_remaining_full()))
-                } else {
-                    None
-                })
-                .spacing(4)
-                .align_x(Alignment::Center),
-        )
-        .width(Length::Fill)
-        .padding([20, 24])
-        .align_x(Alignment::Center)
-        .style(colored_bg(status_color, 12.0));
+        let status_row = widget::row()
+            .push(widget::text::heading(status_text))
+            .push(widget::space().width(Length::Fill))
+            .push_maybe(if self.active {
+                Some(widget::text::heading(self.format_remaining_full()))
+            } else {
+                None
+            })
+            .align_y(Alignment::Center);
+
+        let status_block = widget::container(status_row)
+            .width(Length::Fill)
+            .padding([10, 16])
+            .style(colored_bg(status_color, 12.0));
 
         // Duration preset buttons
         let active_mins = if self.active {
@@ -323,19 +334,10 @@ impl cosmic::Application for AppModel {
             .spacing(6)
             .align_y(Alignment::Center);
 
-        // Toggle button
-        let toggle = if self.active {
-            widget::button::destructive(fl!("deactivate")).on_press(Message::Deactivate)
-        } else {
-            widget::button::suggested(fl!("activate"))
-                .on_press(Message::Activate(self.config.duration_mins))
-        };
-
         let content = widget::column()
             .push(status_block)
             .push(widget::text::heading(fl!("duration")))
             .push(duration_row)
-            .push(toggle)
             .spacing(12)
             .align_x(Alignment::Center)
             .padding(12);
