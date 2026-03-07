@@ -211,8 +211,11 @@ impl cosmic::Application for AppModel {
             row = row.spacing(4);
         }
 
+        let active = self.active;
+        let pill_height = diameter * 0.8;
+        let pill_radius = pill_height / 2.0;
         let content = widget::container(row)
-            .height(Length::Fixed(diameter))
+            .height(Length::Fixed(if self.active { pill_height } else { diameter }))
             .width(if self.active {
                 Length::Shrink
             } else {
@@ -221,17 +224,20 @@ impl cosmic::Application for AppModel {
             .align_x(Alignment::Center)
             .align_y(Alignment::Center)
             .padding(if self.active {
-                [0.0, radius / 2.0]
+                [0.0, pill_radius / 2.0]
             } else {
                 [0.0, 0.0]
             })
-            .style(move |_theme: &Theme| container::Style {
-                background: Some(bg_color.into()),
-                border: cosmic::iced::Border {
-                    radius: radius.into(),
-                    ..Default::default()
-                },
-                ..container::Style::default()
+            .style(move |_theme: &Theme| {
+                let r = if active { pill_radius } else { radius };
+                container::Style {
+                    background: Some(bg_color.into()),
+                    border: cosmic::iced::Border {
+                        radius: r.into(),
+                        ..Default::default()
+                    },
+                    ..container::Style::default()
+                }
             });
 
         let btn = widget::button::custom(self.core.applet.autosize_window(content))
