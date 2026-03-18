@@ -3,15 +3,37 @@
   <id>com.github.bgub.CosmicExtAppletVigil</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MPL-2.0</project_license>
+  <project_group>COSMIC</project_group>
   <name>Vigil</name>
   <summary>Keep your screen awake — a vigil applet for the COSMIC desktop</summary>
+
+  <developer id="com.github.bgub">
+    <name>bgub</name>
+  </developer>
+
+  <url type="homepage">https://github.com/cosmic-utils/cosmic-ext-applet-vigil</url>
+  <url type="bugtracker">https://github.com/cosmic-utils/cosmic-ext-applet-vigil/issues</url>
+
+  <description>
+    <p>A screen wake-lock applet for the COSMIC desktop environment. Prevent your
+      display from dimming or sleeping with a single click from the panel.</p>
+  </description>
+
   <launchable type="desktop-id">com.github.bgub.CosmicExtAppletVigil.desktop</launchable>
+
+  <icon type="stock">com.github.bgub.CosmicExtAppletVigil</icon>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/cosmic-utils/cosmic-ext-applet-vigil/main/screenshot.png</image>
+      <caption>Vigil applet on the COSMIC panel</caption>
+    </screenshot>
+  </screenshots>
+
   <provides>
-    <id>com.github.bgub.CosmicExtAppletVigil</id>
-    <binaries>
-      <binary>cosmic-ext-applet-vigil</binary>
-    </binaries>
+    <binary>cosmic-ext-applet-vigil</binary>
   </provides>
+
   <requires>
     <display_length compare="ge">360</display_length>
   </requires>
@@ -20,9 +42,11 @@
     <control>pointing</control>
     <control>touch</control>
   </supports>
+
   <categories>
-    <category>COSMIC</category>
+    <category>Utility</category>
   </categories>
+
   <keywords>
     <keyword>COSMIC</keyword>
     <keyword>vigil</keyword>
@@ -30,5 +54,10 @@
     <keyword>screen</keyword>
     <keyword>awake</keyword>
   </keywords>
+
   <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="0.1.0" date="2026-03-07" />
+  </releases>
 </component>
