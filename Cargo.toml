@@ -1,6 +1,6 @@
 [package]
 name = "cosmic-ext-applet-vigil"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MPL-2.0"
 description = "Keep your screen awake — a vigil applet for the COSMIC™ desktop"
